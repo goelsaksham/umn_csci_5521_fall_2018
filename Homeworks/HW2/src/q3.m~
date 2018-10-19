@@ -1,0 +1,16 @@
+% First load the training data
+[train_X, train_y] = get_training_data('./data/data.csv');
+% Finding the digits for which we want the features
+[eightDigitFeatureMatrix, eightVec] = get_digit_feature_matrix(train_X, train_y, 8);
+[nineDigitFeatureMatrix, nineVec] = get_digit_feature_matrix(train_X, train_y, 9);
+% Making a new feature matrix that contains data from only these three
+% digits
+X = vertcat(eightDigitFeatureMatrix, nineDigitFeatureMatrix);
+y = vertcat(eightVec, nineVec);
+% Run the PCA algorithm on the input feature matrix for the training set
+principal_component_count = 2;
+[principal_components, explained_var] = pca(X, principal_component_count);
+while explained_var < 0.9
+    [principal_components, explained_var] = pca(X, principal_component_count);
+    principal_component_count+= 1;
+end

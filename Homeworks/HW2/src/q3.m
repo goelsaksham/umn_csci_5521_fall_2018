@@ -8,8 +8,13 @@
 X = vertcat(eightDigitFeatureMatrix, nineDigitFeatureMatrix);
 y = vertcat(eightVec, nineVec);
 % Run the PCA algorithm on the input feature matrix for the training set
-[principal_components, explained_var] = pca(X, 2);
-% Extract the principal components for each digit seperately
+principal_component_count = 2;
+[principal_components, explained_var] = pca(X, principal_component_count);
+while explained_var < 0.9
+    [principal_components, explained_var] = pca(X, principal_component_count);
+    principal_component_count = principal_component_count + 1;
+end
+
 eight_pc = get_digit_feature_matrix(principal_components, y, 8);
 nine_pc = get_digit_feature_matrix(principal_components, y, 9);
 
@@ -27,17 +32,4 @@ figure('Name', 'Most Misclassified Nine', 'NumberTitle', 'off');
 imshow(reshape(nineDigitFeatureMatrix(most_misclassified_nine, :), [28,28]));
 figure('Name', 'Most Misclassified Eight', 'NumberTitle', 'off');
 imshow(reshape(eightDigitFeatureMatrix(most_misclassified_eight, :), [28,28]));
-figure('Name', '2-Dimensional Space representation of Digits', 'NumberTitle', 'off');
-hold on;
-% scatter(LDA);
-scatter(eight_pc(:, 1), eight_pc(:, 2), 'r*');
-scatter(nine_pc(:, 1), nine_pc(:, 2), 'b+');
-scatter(projection_eight * LDA(1), projection_eight * LDA(2), 'g');
-scatter(projection_nine * LDA(1), projection_nine * LDA(2), 'm');
-legend('Digit: 8','Digit: 9');
-plot([x_min, x_max], [classifier(2) * x_min / classifier(1), classifier(2) * x_max / classifier(1)],'k');
-xlabel('Principal Component 1');
-ylabel('Principal Component 2');
-title('2-Dimensional Space representation of Digits');
-hold off;
-%LDA
+figure('Name', '2-Dimensional Space representation of Digits', 'NumberTitle', 'o
