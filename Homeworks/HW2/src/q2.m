@@ -13,7 +13,7 @@ y = vertcat(eightVec, nineVec);
 eight_pc = get_digit_feature_matrix(principal_components, y, 8);
 nine_pc = get_digit_feature_matrix(principal_components, y, 9);
 
-[a,b,LDA] = LDA_twoclass(vertcat(eight_pc, nine_pc), y);
+[LDA, a, b] = LDA_twoclass(vertcat(eight_pc, nine_pc), y);
 
 projection_eight = eight_pc*LDA;
 most_misclassified_eight = find(projection_eight == min(projection_eight));

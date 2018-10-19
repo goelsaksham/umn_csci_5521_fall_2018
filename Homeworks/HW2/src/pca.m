@@ -13,6 +13,7 @@ if size(Sigma, 2) < num_principal_components || size(Sigma, 1) < num_principal_c
 end
 % If the number of principal components requested is within the bounds
 % return the first n columns of the U matrix.
-principal_components = U * Sigma (:, 1:num_principal_components);
+%principal_components = U * Sigma (:, 1:num_principal_components);
+principal_components = U(:, 1:num_principal_components);
 explained_var = sum(diag(Sigma(1:num_principal_components, 1:num_principal_components))) / sum(diag(Sigma));
 end
