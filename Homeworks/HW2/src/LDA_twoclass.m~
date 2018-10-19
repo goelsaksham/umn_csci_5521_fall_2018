@@ -30,10 +30,10 @@ scatter_Between = scatter_Between - ((class_1_numTrainingExamples + class_2_numT
 
 % Finding the optimal projection vector
 [eigen_vectors,eigen_values] = eig(scatter_Between,scatter_W);
-[~, which] = sort(diag(eigen_values), 'descend');
+[~, which] = sort(diag(eigen_values));
 eigen_vectors_transpose = eigen_vectors';
 eigen_vectors_sorted_by_eigen_values = transpose(eigen_vectors_transpose(which, :));
 first_LDA_unnormalized = eigen_vectors_sorted_by_eigen_values(:,1);
-first_LDA = first_LDA_unnormalized/norm(first_LDA_unnormalized);
+first_LDA = first_LDa
 end
 
