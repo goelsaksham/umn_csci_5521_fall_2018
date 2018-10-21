@@ -25,11 +25,9 @@ most_misclassified_eight = find(projection_eight == min(projection_eight));
 projection_nine = nine_pc*LDA;
 most_misclassified_nine = find(projection_nine == max(projection_nine));
 % Plot the scatter plot.
-classifier = [-LDA(2); LDA(1)];
 x_min = min(min(projection_eight(:, 1)), min(projection_nine(:, 1)));
 x_max = max(max(projection_eight(:, 1)), max(projection_nine(:, 1)));
 figure('Name', 'Most Misclassified Nine', 'NumberTitle', 'off');
 imshow(reshape(nineDigitFeatureMatrix(most_misclassified_nine, :), [28,28]));
 figure('Name', 'Most Misclassified Eight', 'NumberTitle', 'off');
 imshow(reshape(eightDigitFeatureMatrix(most_misclassified_eight, :), [28,28]));
-figure('Name', '2-Dimensional Space representation of Digits', 'NumberTitle', 'o
