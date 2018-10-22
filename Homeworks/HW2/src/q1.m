@@ -9,7 +9,7 @@
 X = vertcat(zeroDigitFeatureMatrix, eightDigitFeatureMatrix, nineDigitFeatureMatrix);
 y = vertcat(zeroVec, eightVec, nineVec);
 % Run the PCA algorithm on the input feature matrix for the training set
-[principal_components, explained_var] = pca(X, 2);
+[principal_components, explained_var] = mypca(X, 2);
 % Extract the principal components for each digit seperately
 zero_pc = get_digit_feature_matrix(principal_components, y, 0);
 eight_pc = get_digit_feature_matrix(principal_components, y, 8);

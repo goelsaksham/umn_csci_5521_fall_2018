@@ -9,9 +9,9 @@ X = vertcat(eightDigitFeatureMatrix, nineDigitFeatureMatrix);
 y = vertcat(eightVec, nineVec);
 % Run the PCA algorithm on the input feature matrix for the training set
 principal_component_count = 2;
-[principal_components, explained_var] = pca(X, principal_component_count);
+[principal_components, explained_var] = mypca(X, principal_component_count);
 while explained_var < 0.9
-    [principal_components, explained_var] = pca(X, principal_component_count);
+    [principal_components, explained_var] = mypca(X, principal_component_count);
     principal_component_count = principal_component_count + 1;
 end
 
