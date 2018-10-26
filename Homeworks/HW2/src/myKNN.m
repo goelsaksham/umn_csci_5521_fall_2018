@@ -1,4 +1,13 @@
 function [classification] = myKNN(filename, l, k)
+% MYKNN - Function to compute classification obtained from running KNN
+% algorithm on a set of PCA projection subspace. We compute the number of
+% principal components decided by the user and the same for the number of
+% nearest neighbors that we observe for our KNN algorithm.
+%
+% filename - File that we get training and test from data from
+% l - Number of principal components to be taken
+% k - Number of nearest neighbors to be considered in KNN
+
 % First load the training data
 [train_X, train_y] = get_training_data(filename);
 [test_X, test_y] = get_test_data(filename);
