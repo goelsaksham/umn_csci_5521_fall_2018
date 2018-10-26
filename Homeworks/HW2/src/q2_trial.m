@@ -1,5 +1,5 @@
 % First load the training data
-[train_X, train_y] = get_training_data('/Users/abhirajmohan/Desktop/CSCI5521/umn_csci_5521_fall_2018/Homeworks/HW2/data/data.csv');
+[train_X, train_y] = get_training_data('./data/data.csv');
 % Finding the digits for which we want the features
 [eightDigitFeatureMatrix, eightVec] = get_digit_feature_matrix(train_X, train_y, 8);
 [nineDigitFeatureMatrix, nineVec] = get_digit_feature_matrix(train_X, train_y, 9);
@@ -20,11 +20,15 @@ mean_eight_projection = mean_eight * projectionVector;
 mean_nine_projection = mean_nine * projectionVector;
 
 projection_eight = eight_pc*projectionVector;
-distance_from_mean_nine = abs(projection_eight - mean_nine_projection);
-[~,most_misclassified_eight] = min(distance_from_mean_nine);
+distance_eight_to_nine = abs(projection_eight - mean_nine_projection);
+distance_eight_to_eight = abs(projection_eight - mean_eight_projection);
+distance_eight_misclassification = distance_eight_to_eight./distance_eight_to_nine;
+[~,most_misclassified_eight] = max(distance_eight_misclassification);
 projection_nine = nine_pc*projectionVector;
-distance_from_mean_eight = abs(projection_nine - mean_eight_projection);
-[~, most_misclassified_nine] = min(distance_from_mean_eight);
+distance_nine_to_eight = abs(projection_nine - mean_eight_projection);
+distance_nine_to_nine = abs(projection_nine - mean_nine_projection);
+distance_nine_misclassification = distance_nine_to_nine./distance_nine_to_eight;
+[~, most_misclassified_nine] = max(distance_nine_misclassification);
 
 % Getting the classifier vector
 classifier_vector = [-projectionVector(2); projectionVector(1)];
