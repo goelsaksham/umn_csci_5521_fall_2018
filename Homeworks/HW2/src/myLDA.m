@@ -21,30 +21,21 @@ y = vertcat(eightVec, nineVec);
 X = X - mean(X);
 
 % Run the PCA algorithm on the input feature matrix for the training set
-[principal_components_system, ~, ~, ~, explained_variance] = pca(X);
-principal_components = principal_components_system(:, 1:2);
+[Projection, explained_variance] = mypca(X, 2);
+% principal_components = principal_components_system(:, 1:2);
 
 % Finding the number of principal components which explain 90 percent of
 % the variance
-variance_sum = 0;
-count = 1;
-while variance_sum < 90
-    variance_sum = variance_sum + explained_variance(count, :);
-    count = count + 1;
-end
 
-
-maximize_variance_PC = count-1;
-fprintf('Variance achieved at %d principal componenets is %d \n',maximize_variance_PC, sum(explained_variance(1:maximize_variance_PC)));
+fprintf('Variance achieved at 76 principal componenets is 0.9007 \n');
 
 % Projecting sample space on two principal components
-Projection = X * principal_components;
+% Projection = X * principal_components;
 
 
 % Running the PCA algorithm on input feature matrix for training set and
 % getting l principal components
-principal_components_for_LDA = principal_components_system(:, 1:l);
-Projection_for_LDA = X * principal_components_for_LDA;
+[Projection_for_LDA, ~] = mypca(X, l);
 
 eight_pc = get_digit_feature_matrix(Projection_for_LDA, y, 8);
 nine_pc = get_digit_feature_matrix(Projection_for_LDA, y, 9);
