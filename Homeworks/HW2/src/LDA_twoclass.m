@@ -29,11 +29,7 @@ scatter_Between = (class_1_numTrainingExamples * (mean(digit_1_featureMatrix)' *
 scatter_Between = scatter_Between - ((class_1_numTrainingExamples + class_2_numTrainingExamples) * (mean(inputFeatureMatrix)' * mean(inputFeatureMatrix)));
 
 % Finding the optimal projection vector
-%[eigen_vectors, eigen_values] = eig(scatter_Between,scatter_W);
-%[~, indices] = sort(diag(eigen_values), 'descend');
-%eigen_vectors_sorted_by_eigen_values = eigen_vectors(:, indices);
 projection_vector = scatter_W\(mean(digit_1_featureMatrix)' - mean(digit_2_featureMatrix)');
-%projection_vector = eigen_vectors_sorted_by_eigen_values(:, 1);
 unit_projection_vector = projection_vector/norm(projection_vector);
 
 end

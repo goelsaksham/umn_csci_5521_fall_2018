@@ -25,7 +25,6 @@ Projection = X * principal_components;
 
 classification = zeros(size(y));
 for row_num = 1:size(Projection, 1)
-    
     % Running kNN algorithm on every sample in the projection matrix
     classification(row_num) = kNN(k, Projection(row_num, :), Projection, y);
 end
