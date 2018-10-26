@@ -13,18 +13,14 @@ allClassLabels = unique(trainingDataTargetVector);
 
 difference = abs(sum(nearestKPointsClassLabels == allClassLabels(1))- sum(nearestKPointsClassLabels == allClassLabels(2)));
 
-if sum(nearestKPointsClassLabels == allClassLabels(1)) > sum(nearestKPointsClassLabels == allClassLabels(2))
-    if (difference == 1) && (sortedDistanceClassLabels(K) == sortedDistanceClassLabels(K+1))
+if (difference == 1) && (sortedDistance(K) == sortedDistanceClassLabels(K+1))
         classPrediction = -1;
-    else
-        classPrediction = allClassLabels(1);
-    end
 else
-    if (difference == 1) && (sortedDistanceClassLabels(K) == sortedDistanceClassLabels(K+1))
-        classPrediction = -1;
-    else
+    if sum(nearestKPointsClassLabels == allClassLabels(1)) > sum(nearestKPointsClassLabels == allClassLabels(2))
         classPrediction = allClassLabels(1);
-    endend
-
+    else
+        classPrediction = allClassLabels(2);
+    end
+end
 end
 
