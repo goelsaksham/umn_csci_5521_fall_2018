@@ -44,8 +44,6 @@ train_ConfMatrix = confusionmat(y_train, train_bestPredVec);
 train_ErrorRate = sum(y_train ~= train_bestPredVec) / size(train_bestPredVec, 1);
 
 
-
-
 % First load the test data
 [test_X, test_y] = get_test_data('./data/data.csv');
 % Finding the digits for which we want the features
@@ -67,3 +65,15 @@ end
 
 test_ConfMatrix = confusionmat(y_test, test_pred_vec);
 test_ErrorRate = sum(y_test ~= test_pred_vec) / size(test_pred_vec, 1);
+
+% Displaying the image of the randomly chosen misclassified digits
+misclassified_Eights = X_test((y_test ~= test_pred_vec) & (y_test == 8), :);
+misclassified_Nines = X_test((y_test ~= test_pred_vec) & (y_test == 9), :);
+randomSelectedEight = misclassified_Eights(1, :);
+randomSelectedNine = misclassified_Nines(1, :);
+
+% Show the images
+figure('Name', 'Misclassified Eight', 'NumberTitle', 'off');
+imshow(reshape(randomSelectedEight, [28,28]));
+figure('Name', 'Misclassified Nine', 'NumberTitle', 'off');
+imshow(reshape(randomSelectedNine, [28,28]));
