@@ -13,7 +13,7 @@ X_train = vertcat(train_eightDigitFeatureMatrix, train_nineDigitFeatureMatrix);
 y_train = vertcat(train_eightVec, train_nineVec);
 
 % Run the PCA algorithm on the input feature matrix for the training set
-principal_component_count = 2;
+principal_component_count = 76;
 [~, train_explained_var] = mypca(X_train, principal_component_count);
 while train_explained_var < 0.9
     principal_component_count = principal_component_count + 1;

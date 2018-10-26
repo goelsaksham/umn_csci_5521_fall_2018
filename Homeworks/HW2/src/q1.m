@@ -5,11 +5,15 @@
 
 % First load the training data
 [train_X, train_y] = get_training_data('./data/data.csv');
-[test_X, test_y] = get_test_data('./data/data.csv');
+% Dont need Test data for this part
+%[test_X, test_y] = get_test_data('./data/data.csv');
 
 % Construct the X, and y matrices for all data
-X = vertcat(train_X, test_X);
-y = vertcat(train_y, test_y);
+X = train_X;
+y = train_y;
+% Dont need Test Data for this part
+% X = vertcat(train_X, test_X);
+% y = vertcat(train_y, test_y);
 
 % Finding the digits for which we want the features
 [zeroDigitFeatureMatrix, zeroVec] = get_digit_feature_matrix(X, y, 0);

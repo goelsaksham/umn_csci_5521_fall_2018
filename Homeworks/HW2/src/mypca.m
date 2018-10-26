@@ -10,7 +10,7 @@ function [projection_on_principal_components, explained_var] = mypca(feature_mat
 zeroCenteredFeatureMatrix = zero_center(feature_matrix);
 % Performing a Single Value Decomposition using the inbuilt svd function
 % over the feature matrix
-[U, Sigma, Vt] = svd(zeroCenteredFeatureMatrix);
+[U, Sigma, ~] = svd(zeroCenteredFeatureMatrix);
 % Finding the required number of principal components
 % First check whether the given argument for the number of principal
 % components is possible or not
@@ -26,10 +26,12 @@ projection_on_principal_components = U * Sigma (:, 1:num_principal_components);
 %projection_on_principal_components = U(:, 1:num_principal_components);
 
 % Calculate the explained variance using the Eigen Values.
-explained_var = sum(diag(Sigma(1:num_principal_components, 1:num_principal_components) .^ 2)) / sum(diag(Sigma .^ 2));
+diag_Sigma = diag(Sigma);
+%explained_var = sum(diag(Sigma(1:num_principal_components, 1:num_principal_components) .^ 2)) / sum(diag(Sigma .^ 2));
+explained_var = sum(diag_Sigma(1:num_principal_components) .^ 2) / sum(diag_Sigma.^ 2);
 
 % If want the principal component vectors:
-V = Vt';
-principal_component_vectors = V(:, 1:num_principal_components);
+%V = Vt';
+% principal_component_vectors = V(:, 1:num_principal_components);
 
 end

@@ -10,16 +10,16 @@
 % digits
 X = vertcat(train_eightDigitFeatureMatrix, train_nineDigitFeatureMatrix);
 y = vertcat(train_eightVec, train_nineVec);
+X = X - mean(X);
 % Run the PCA algorithm on the input feature matrix for the training set.
 % Keep on increasing the number of principal components on which to project 
 % until the captured variance is more than 90%.
-principal_component_count = 2;
+principal_component_count = 76;
 [projection_on_principal_components, explained_var] = mypca(X, principal_component_count);
 while explained_var < 0.9
     principal_component_count = principal_component_count + 1;
     [projection_on_principal_components, explained_var] = mypca(X, principal_component_count);
 end
-disp(principal_component_count)
 
 % Find the projections of the individual digit training data examples on
 % the required number of principal components
@@ -30,18 +30,44 @@ train_nine_pc_projection = get_digit_feature_matrix(projection_on_principal_comp
 % projected to a 1 Dimensional surface
 [LDAprojectionVector, ~, ~] = LDA_twoclass(vertcat(train_eight_pc_projection, train_nine_pc_projection), y);
 
+train_AllProjectionsOnLDA = projection_on_principal_components * LDAprojectionVector;
+
+
 % Get the 1 Dimensional Projections for each digit
 train_eightDigitProjectiononLDA = train_eight_pc_projection * LDAprojectionVector;
 train_most_misclassified_eight = find(train_eightDigitProjectiononLDA == min(train_eightDigitProjectiononLDA));
 train_nineDigitProjectiononLDA = train_nine_pc_projection * LDAprojectionVector;
 train_most_misclassified_nine = find(train_nineDigitProjectiononLDA == max(train_nineDigitProjectiononLDA));
 
+train_trueClassLabels = y;
+
+% Do a loop to find the best classifier:
+bestClassficiationThreshold = min(train_AllProjectionsOnLDA);
+train_BestErrorRate = inf;
+all_ClassificationThreshold = min(train_AllProjectionsOnLDA):0.1:max(train_AllProjectionsOnLDA);
+for classficiationThreshold = all_ClassificationThreshold
+    % Initialize the vector which will contain all the class labels predicted
+    % by LDA projection classifier.
+    train_ClassLabelsPredictedbyLDA = zeros(size(train_AllProjectionsOnLDA));
+    % Our classifier predicts the digits over 0 as 8 while less than 0 as 9
+    train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA >= classficiationThreshold) = 8;
+    train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA < classficiationThreshold) = 9;
+    train_ErrorRate = sum(train_ClassLabelsPredictedbyLDA ~= train_trueClassLabels) / size(train_ClassLabelsPredictedbyLDA, 1);
+    if train_ErrorRate < train_BestErrorRate
+       train_BestErrorRate = train_ErrorRate;
+       bestClassficiationThreshold = classficiationThreshold;
+    end
+end
+
+
+
+
 % Constructing the Confusion Matrix for Training Data
 train_AllProjectionsOnLDA = vertcat(train_eightDigitProjectiononLDA, train_nineDigitProjectiononLDA);
 train_ClassLabelsPredictedbyLDA = zeros(size(train_AllProjectionsOnLDA));
 % Our classifier predicts the digits over 0 as 8 while less than 0 as 9
-train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA >= 0) = 8;
-train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA < 0) = 9;
+train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA >= bestClassficiationThreshold) = 8;
+train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA < bestClassficiationThreshold) = 9;
 
 train_ConfMatrix = confusionmat(vertcat(train_eightVec, train_nineVec), train_ClassLabelsPredictedbyLDA);
 train_ErrorRate = sum(train_ClassLabelsPredictedbyLDA ~= vertcat(train_eightVec, train_nineVec)) / size(train_ClassLabelsPredictedbyLDA, 1);
@@ -74,8 +100,8 @@ test_most_misclassified_nine = find(test_nineDigitProjectiononLDA == max(test_ni
 test_AllProjectionsOnLDA = vertcat(test_eightDigitProjectiononLDA, test_nineDigitProjectiononLDA);
 test_ClassLabelsPredictedbyLDA = zeros(size(test_AllProjectionsOnLDA));
 % Our classifier predicts the digits over 0 as 8 while less than 0 as 9
-test_ClassLabelsPredictedbyLDA(test_AllProjectionsOnLDA >= 0) = 8;
-test_ClassLabelsPredictedbyLDA(test_AllProjectionsOnLDA < 0) = 9;
+test_ClassLabelsPredictedbyLDA(test_AllProjectionsOnLDA >= bestClassficiationThreshold) = 8;
+test_ClassLabelsPredictedbyLDA(test_AllProjectionsOnLDA < bestClassficiationThreshold) = 9;
 
 test_ConfMatrix = confusionmat(vertcat(test_eightVec, test_nineVec), test_ClassLabelsPredictedbyLDA);
 test_ErrorRate = sum(test_ClassLabelsPredictedbyLDA ~= vertcat(test_eightVec, test_nineVec)) / size(test_ClassLabelsPredictedbyLDA, 1);
@@ -84,6 +110,6 @@ test_ErrorRate = sum(test_ClassLabelsPredictedbyLDA ~= vertcat(test_eightVec, te
 
 % Show the images
 figure('Name', 'Most Misclassified Eight', 'NumberTitle', 'off');
-imshow(reshape(train_eightDigitFeatureMatrix(most_misclassified_eight, :), [28,28]));
+imshow(reshape(train_eightDigitFeatureMatrix(train_most_misclassified_eight, :), [28,28]));
 figure('Name', 'Most Misclassified Nine', 'NumberTitle', 'off');
-imshow(reshape(train_nineDigitFeatureMatrix(most_misclassified_nine, :), [28,28]));
+imshow(reshape(train_nineDigitFeatureMatrix(train_most_misclassified_nine, :), [28,28]));

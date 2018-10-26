@@ -4,6 +4,7 @@ function [classPrediction] = kNN(K, testFeatureVector, trainingDataFeatureMatrix
 
 % First finding the raw distance between the testfeature vector and all the
 % training samples
+allClassLabels = unique(trainingDataTargetVector);
 distances = sum((trainingDataFeatureMatrix - testFeatureVector).^2, 2);
 [sortedDistance, indices] = sort(distances);
 sortedDistanceClassLabels = trainingDataTargetVector(indices);
