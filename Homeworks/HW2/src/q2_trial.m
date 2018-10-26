@@ -1,3 +1,6 @@
+% This script is responsible to run the various helper functions to answer
+% part 2 of the homework.
+
 % First load the training data
 [train_X, train_y] = get_training_data('./data/data.csv');
 % Finding the digits for which we want the features
@@ -8,23 +11,26 @@
 X = vertcat(eightDigitFeatureMatrix, nineDigitFeatureMatrix);
 y = vertcat(eightVec, nineVec);
 % Run the PCA algorithm on the input feature matrix for the training set
-[principal_components, explained_var] = mypca(X, 2);
-% Extract the principal components for each digit seperately
-[eight_pc, ~] = get_digit_feature_matrix(principal_components, y, 8);
-[nine_pc, ~] = get_digit_feature_matrix(principal_components, y, 9);
-mean_eight = mean(eight_pc);
-mean_nine = mean(nine_pc);
+[projection_on_principal_components, explained_var] = mypca(X, 2);
+% Extract the projection on principal components for each digit seperately
+[eight_pc_projection, ~] = get_digit_feature_matrix(projection_on_principal_components, y, 8);
+[nine_pc_projection, ~] = get_digit_feature_matrix(projection_on_principal_components, y, 9);
 
-[projectionVector, ~, ~] = LDA_twoclass(vertcat(eight_pc, nine_pc), y);
+% Find the mean for both the classes
+mean_eight = mean(eight_pc_projection);
+mean_nine = mean(nine_pc_projection);
+
+% Run the LDA Algorithm to project the data on 1 Dimension
+[projectionVector, ~, ~] = LDA_twoclass(vertcat(eight_pc_projection, nine_pc_projection), y);
 mean_eight_projection = mean_eight * projectionVector;
 mean_nine_projection = mean_nine * projectionVector;
 
-projection_eight = eight_pc*projectionVector;
+projection_eight = eight_pc_projection*projectionVector;
 distance_eight_to_nine = abs(projection_eight - mean_nine_projection);
 distance_eight_to_eight = abs(projection_eight - mean_eight_projection);
 distance_eight_misclassification = distance_eight_to_eight./distance_eight_to_nine;
 [~,most_misclassified_eight] = max(distance_eight_misclassification);
-projection_nine = nine_pc*projectionVector;
+projection_nine = nine_pc_projection*projectionVector;
 distance_nine_to_eight = abs(projection_nine - mean_eight_projection);
 distance_nine_to_nine = abs(projection_nine - mean_nine_projection);
 distance_nine_misclassification = distance_nine_to_nine./distance_nine_to_eight;
@@ -33,16 +39,16 @@ distance_nine_misclassification = distance_nine_to_nine./distance_nine_to_eight;
 % Getting the classifier vector
 classifier_vector = [-projectionVector(2); projectionVector(1)];
 
-%% Plotting Section
 
+%% Plotting Section
 
 %% PCA Plot 
 % Plot the scatter plot.
 figure('Name', '2-Dimensional Space representation of Digits', 'NumberTitle', 'off');
 subplot(4, 2, 1);
 hold on;
-scatter(eight_pc(:, 1), eight_pc(:, 2), 'r*');
-scatter(nine_pc(:, 1), nine_pc(:, 2), 'b+');
+scatter(eight_pc_projection(:, 1), eight_pc_projection(:, 2), 'r*');
+scatter(nine_pc_projection(:, 1), nine_pc_projection(:, 2), 'b+');
 xlabel('Principal Component 1');
 ylabel('Principal Component 2');
 title('2-Dimensional Space representation of Digits');
@@ -53,8 +59,8 @@ hold off;
 %% PCA Plot with LDA Projection Vector and Classifier Vector
 subplot(4, 2, 2);
 hold on;
-scatter(eight_pc(:, 1), eight_pc(:, 2), 'r*');
-scatter(nine_pc(:, 1), nine_pc(:, 2), 'b+');
+scatter(eight_pc_projection(:, 1), eight_pc_projection(:, 2), 'r*');
+scatter(nine_pc_projection(:, 1), nine_pc_projection(:, 2), 'b+');
 xl = xlim;
 yl = ylim;
 
@@ -89,8 +95,8 @@ hold off;
 %% Digit PCA Features projected on the LDA Projection Vector
 subplot(4, 2, [5 8]);
 hold on;
-scatter(eight_pc(:, 1), eight_pc(:, 2), 'r*', 'MarkerEdgeAlpha',.3);
-scatter(nine_pc(:, 1), nine_pc(:, 2), 'b+', 'MarkerEdgeAlpha',.3);
+scatter(eight_pc_projection(:, 1), eight_pc_projection(:, 2), 'r*', 'MarkerEdgeAlpha',.3);
+scatter(nine_pc_projection(:, 1), nine_pc_projection(:, 2), 'b+', 'MarkerEdgeAlpha',.3);
 
 scatter(projection_eight * projectionVector(1), projection_eight * projectionVector(2), 'r*');
 scatter(projection_nine * projectionVector(1), projection_nine * projectionVector(2), 'b+');

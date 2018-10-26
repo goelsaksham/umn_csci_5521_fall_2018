@@ -1,34 +1,89 @@
+% This script is responsible to run the various helper functions to answer
+% part 3 of the homework.
+
 % First load the training data
 [train_X, train_y] = get_training_data('./data/data.csv');
 % Finding the digits for which we want the features
-[eightDigitFeatureMatrix, eightVec] = get_digit_feature_matrix(train_X, train_y, 8);
-[nineDigitFeatureMatrix, nineVec] = get_digit_feature_matrix(train_X, train_y, 9);
+[train_eightDigitFeatureMatrix, train_eightVec] = get_digit_feature_matrix(train_X, train_y, 8);
+[train_nineDigitFeatureMatrix, train_nineVec] = get_digit_feature_matrix(train_X, train_y, 9);
 % Making a new feature matrix that contains data from only these three
 % digits
-X = vertcat(eightDigitFeatureMatrix, nineDigitFeatureMatrix);
-y = vertcat(eightVec, nineVec);
-% Run the PCA algorithm on the input feature matrix for the training set
+X = vertcat(train_eightDigitFeatureMatrix, train_nineDigitFeatureMatrix);
+y = vertcat(train_eightVec, train_nineVec);
+% Run the PCA algorithm on the input feature matrix for the training set.
+% Keep on increasing the number of principal components on which to project 
+% until the captured variance is more than 90%.
 principal_component_count = 2;
-[principal_components, explained_var] = mypca(X, principal_component_count);
+[projection_on_principal_components, explained_var] = mypca(X, principal_component_count);
 while explained_var < 0.9
-    [principal_components, explained_var] = mypca(X, principal_component_count);
     principal_component_count = principal_component_count + 1;
+    [projection_on_principal_components, explained_var] = mypca(X, principal_component_count);
 end
+disp(principal_component_count)
 
-eight_pc = get_digit_feature_matrix(principal_components, y, 8);
-nine_pc = get_digit_feature_matrix(principal_components, y, 9);
+% Find the projections of the individual digit training data examples on
+% the required number of principal components
+train_eight_pc_projection = get_digit_feature_matrix(projection_on_principal_components, y, 8);
+train_nine_pc_projection = get_digit_feature_matrix(projection_on_principal_components, y, 9);
 
-[LDA, a, b] = LDA_twoclass(vertcat(eight_pc, nine_pc), y);
+% Now find the Projection Vector using LDA so that each digit can be
+% projected to a 1 Dimensional surface
+[LDAprojectionVector, ~, ~] = LDA_twoclass(vertcat(train_eight_pc_projection, train_nine_pc_projection), y);
 
-projection_eight = eight_pc*LDA;
-most_misclassified_eight = find(projection_eight == min(projection_eight));
-projection_nine = nine_pc*LDA;
-most_misclassified_nine = find(projection_nine == max(projection_nine));
-% Plot the scatter plot.
-x_min = min(min(projection_eight(:, 1)), min(projection_nine(:, 1)));
-x_max = max(max(projection_eight(:, 1)), max(projection_nine(:, 1)));
-figure('Name', 'Most Misclassified Nine', 'NumberTitle', 'off');
-imshow(reshape(nineDigitFeatureMatrix(most_misclassified_nine, :), [28,28]));
+% Get the 1 Dimensional Projections for each digit
+train_eightDigitProjectiononLDA = train_eight_pc_projection * LDAprojectionVector;
+train_most_misclassified_eight = find(train_eightDigitProjectiononLDA == min(train_eightDigitProjectiononLDA));
+train_nineDigitProjectiononLDA = train_nine_pc_projection * LDAprojectionVector;
+train_most_misclassified_nine = find(train_nineDigitProjectiononLDA == max(train_nineDigitProjectiononLDA));
+
+% Constructing the Confusion Matrix for Training Data
+train_AllProjectionsOnLDA = vertcat(train_eightDigitProjectiononLDA, train_nineDigitProjectiononLDA);
+train_ClassLabelsPredictedbyLDA = zeros(size(train_AllProjectionsOnLDA));
+% Our classifier predicts the digits over 0 as 8 while less than 0 as 9
+train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA >= 0) = 8;
+train_ClassLabelsPredictedbyLDA(train_AllProjectionsOnLDA < 0) = 9;
+
+train_ConfMatrix = confusionmat(vertcat(train_eightVec, train_nineVec), train_ClassLabelsPredictedbyLDA);
+train_ErrorRate = sum(train_ClassLabelsPredictedbyLDA ~= vertcat(train_eightVec, train_nineVec)) / size(train_ClassLabelsPredictedbyLDA, 1);
+
+
+
+% Get the confusion matrix for test set
+[test_X, test_y] = get_test_data('./data/data.csv');
+% Finding the digits for which we want the features
+[test_eightDigitFeatureMatrix, test_eightVec] = get_digit_feature_matrix(test_X, test_y, 8);
+[test_nineDigitFeatureMatrix, test_nineVec] = get_digit_feature_matrix(test_X, test_y, 9);
+% Making a new feature matrix that contains data from only these three
+% digits
+X = vertcat(test_eightDigitFeatureMatrix, test_nineDigitFeatureMatrix);
+y = vertcat(test_eightVec, test_nineVec);
+% Run the PCA algorithm on the input feature matrix for the training set
+[test_projection_on_principal_components, test_explained_var] = mypca(X, principal_component_count);
+% Extract the projection on principal components for each digit seperately
+[test_eight_pc_projection, ~] = get_digit_feature_matrix(test_projection_on_principal_components, y, 8);
+[test_nine_pc_projection, ~] = get_digit_feature_matrix(test_projection_on_principal_components, y, 9);
+
+% Get the projections for each digit on the obtained surface
+test_eightDigitProjectiononLDA = test_eight_pc_projection * LDAprojectionVector;
+test_most_misclassified_eight = find(test_eightDigitProjectiononLDA == min(test_eightDigitProjectiononLDA));
+test_nineDigitProjectiononLDA = test_nine_pc_projection * LDAprojectionVector;
+test_most_misclassified_nine = find(test_nineDigitProjectiononLDA == max(test_nineDigitProjectiononLDA));
+
+
+% Constructing the Confusion Matrix for test data
+test_AllProjectionsOnLDA = vertcat(test_eightDigitProjectiononLDA, test_nineDigitProjectiononLDA);
+test_ClassLabelsPredictedbyLDA = zeros(size(test_AllProjectionsOnLDA));
+% Our classifier predicts the digits over 0 as 8 while less than 0 as 9
+test_ClassLabelsPredictedbyLDA(test_AllProjectionsOnLDA >= 0) = 8;
+test_ClassLabelsPredictedbyLDA(test_AllProjectionsOnLDA < 0) = 9;
+
+test_ConfMatrix = confusionmat(vertcat(test_eightVec, test_nineVec), test_ClassLabelsPredictedbyLDA);
+test_ErrorRate = sum(test_ClassLabelsPredictedbyLDA ~= vertcat(test_eightVec, test_nineVec)) / size(test_ClassLabelsPredictedbyLDA, 1);
+
+
+
+% Show the images
 figure('Name', 'Most Misclassified Eight', 'NumberTitle', 'off');
-imshow(reshape(eightDigitFeatureMatrix(most_misclassified_eight, :), [28,28]));
-%figure('Name', '2-Dimensional Space representation of Digits', 'NumberTitle', 'off');
+imshow(reshape(train_eightDigitFeatureMatrix(most_misclassified_eight, :), [28,28]));
+figure('Name', 'Most Misclassified Nine', 'NumberTitle', 'off');
+imshow(reshape(train_nineDigitFeatureMatrix(most_misclassified_nine, :), [28,28]));
