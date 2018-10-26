@@ -1,7 +1,7 @@
 function [unit_projection_vector, scatter_W, scatter_Between] = LDA_twoclass(inputFeatureMatrix, targetVec)
 % LDA Summary of this function goes here
 %   Detailed explanation goes here
-class_labels = unique(targetVec);
+class_labels = sort(unique(targetVec));
 
 if size(class_labels, 1) ~= 2
     error('Invalid number of classes')
@@ -32,8 +32,8 @@ scatter_Between = scatter_Between - ((class_1_numTrainingExamples + class_2_numT
 [eigen_vectors, eigen_values] = eig(scatter_Between,scatter_W);
 [~, indices] = sort(diag(eigen_values), 'descend');
 eigen_vectors_sorted_by_eigen_values = eigen_vectors(:, indices);
+%projection_vector = scatter_W\(mean(digit_1_featureMatrix)' - mean(digit_2_featureMatrix)');
 projection_vector = eigen_vectors_sorted_by_eigen_values(:, 1);
 unit_projection_vector = projection_vector/norm(projection_vector);
 
 end
-

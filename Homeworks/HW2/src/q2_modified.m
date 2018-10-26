@@ -112,3 +112,5 @@ imshow(reshape(nineDigitFeatureMatrix(most_misclassified_nine, :), [28,28]));
 figure('Name', 'Most Misclassified Eight', 'NumberTitle', 'off');
 imshow(reshape(eightDigitFeatureMatrix(most_misclassified_eight, :), [28,28]));
 %LDA
+
+disp(most_misclassified_nine);

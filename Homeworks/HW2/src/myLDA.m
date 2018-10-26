@@ -50,5 +50,6 @@ LDA_projection = Projection_for_LDA * LDA;
 
 % Matrix that classifies LDA projections
 classification = arrayfun(@(x) label_prediction_fn(x), LDA_projection);
+sum(classification ~= y)
 end
 
