@@ -21,6 +21,15 @@ y = vertcat(eightVec, nineVec);
 [principal_components_system, score, explained_variance] = pca(X);
 principal_components = principal_components_system(:, 1:2);
 
+sum_of_variance = 0;
+count = 1;
+while sum_of_variance < 0.9
+    sum_of_variance = sum_of_variance + explained_variance(count,1);
+    count = count + 1;
+end
+
+disp(explained_variance);
+
 X = X - mean(X);
 Projection = X * principal_components;
 
