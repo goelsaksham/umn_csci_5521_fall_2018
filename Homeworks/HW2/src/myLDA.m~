@@ -17,27 +17,22 @@ Projection_y = vertcat(train_y, test_y);
 X = vertcat(eightDigitFeatureMatrix, nineDigitFeatureMatrix);
 y = vertcat(eightVec, nineVec);
 
-% Normalizing the sample space
 X = X - mean(X);
 
 % Run the PCA algorithm on the input feature matrix for the training set
 [principal_components_system, ~, ~, ~, explained_variance] = pca(X);
 principal_components = principal_components_system(:, 1:2);
 
-% Finding the number of principal components which explain 90 percent of
-% the variance
 variance_sum = 0;
 count = 1;
 while variance_sum < 90
     variance_sum = variance_sum + explained_variance(count, :);
     count = count + 1;
 end
-
-
 maximize_variance_PC = count-1;
-fprintf('Variance achieved at %d principal componenets is %d \n',maximize_variance_PC, sum(explained_variance(1:maximize_variance_PC)));
+disp(maximize_variance_PC);
 
-% Projecting sample space on two principal components
+
 Projection = X * principal_components;
 
 
@@ -66,6 +61,6 @@ LDA_projection = Projection_for_LDA * LDA;
 
 % Matrix that classifies LDA projections
 classification = arrayfun(@(x) label_prediction_fn(x), LDA_projection);
-fprintf('Error rate is %d \n', sum(classification ~= y)/size(y,1));
+sum(classification ~= y)
 end
 

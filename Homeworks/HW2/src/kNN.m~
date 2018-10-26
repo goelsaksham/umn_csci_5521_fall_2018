@@ -9,18 +9,16 @@ distances = sum((trainingDataFeatureMatrix - testFeatureVector).^2, 2);
 sortedDistanceClassLabels = trainingDataTargetVector(indices);
 
 end_index = K;
-while sortedDistance(K) == sortedDistance(end_index+1)
+while sortedDistance(end_index) == sortedDistance(end_index+1)
     end_index = end_index + 1;
 end
    
-nearestKPointsClassLabels = sortedDistanceClassLabels(1:end_index);
+nearestKPointsClassLabels = sortedDistance
 
 if sum(nearestKPointsClassLabels == allClassLabels(1)) > sum(nearestKPointsClassLabels == allClassLabels(2))
    classPrediction = allClassLabels(1);
-elseif sum(nearestKPointsClassLabels == allClassLabels(1)) < sum(nearestKPointsClassLabels == allClassLabels(2))
-   classPrediction = allClassLabels(2);
 else
-    classPrediction = -1;
+   classPrediction = allClassLabels(2);
 end
 end
 
