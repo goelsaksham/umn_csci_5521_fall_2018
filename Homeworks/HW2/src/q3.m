@@ -14,7 +14,7 @@ X = X - mean(X);
 % Run the PCA algorithm on the input feature matrix for the training set.
 % Keep on increasing the number of principal components on which to project 
 % until the captured variance is more than 90%.
-principal_component_count = 76;
+principal_component_count = 2;
 [projection_on_principal_components, explained_var] = mypca(X, principal_component_count);
 while explained_var < 0.9
     principal_component_count = principal_component_count + 1;
