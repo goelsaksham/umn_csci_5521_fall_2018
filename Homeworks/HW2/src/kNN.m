@@ -13,7 +13,7 @@ even_distances = sorted_distances(K+1);
 
 allClassLabels = unique(trainingDataTargetVector);
 
-if unique(even_distances) == sorted_distances(1)
+if numel(unique(even_distances)) == 1
     if sum(nearestEvenPointsClassLabels == allClassLabels(1)) == sum(nearestEvenPointsClassLabels == allClassLabels(2))
         classPrediction = -1;
     end
