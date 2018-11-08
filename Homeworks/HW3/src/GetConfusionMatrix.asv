@@ -1,0 +1,15 @@
+function [ConfusionMatrix] = GetConfusionMatrix(TrueLabels, Assignments)
+%   GETCONFUSIONMATRIX Summary of this function goes here
+%   Detailed explanation goes here
+
+classLabels = sort(unique(TrueLabels));
+clusterLabels = sort(unique(Assignments));
+ConfusionMatrix = zeros(size(clusterLabels, 1), size(classLabels, 1));
+
+for cluster_label_index = 1:size(clusterLabels, 1)
+    for class_label_index = 1:size(classLabels, 1)
+        ConfusionMatrix(cluster_label_index, class_label_index) = sum(TrueLabels(Assignments == clusterLabels(cluster_label_index)) == classLabels(class_label_index));
+    end
+end
+
+end

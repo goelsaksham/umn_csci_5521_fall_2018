@@ -1,6 +1,14 @@
 function [ConfusionMatrix] = GetConfusionMatrix(TrueLabels, Assignments)
-%GETCONFUSIONMATRIX Summary of this function goes here
-%   Detailed explanation goes here
+%   GETCONFUSIONMATRIX is my implementation of computing the confusion
+%   matrix for the k-means initialization. This confusion matrix represents
+%   the cluster centers and the number of values for each class which
+%   are assigned to that particular cluster. Consider if the number of
+%   unique clusters is M and the number of unique classes is N, then the output
+%   matrix would be of size M X N.
+
+% Parameters:
+%   TrueLabels - The true class labels for all the samples
+%   AssignedLabels - The assigned cluster labels for all the samples
 
 classLabels = sort(unique(TrueLabels));
 clusterLabels = sort(unique(Assignments));

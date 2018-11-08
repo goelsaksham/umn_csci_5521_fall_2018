@@ -1,6 +1,10 @@
 function [distance] = findDistance(x1, x2)
-%FINDDISTANCE Summary of this function goes here
-%   Detailed explanation goes here
+%   FINDDISTANCE This function finds the euclidean distance between two
+%   vectors.
+%   
+% Arguments:
+%   x1: First Vector
+%   x2: Second Vector
 
 distance = sqrt(sum((x1 - x2).^2));
 
