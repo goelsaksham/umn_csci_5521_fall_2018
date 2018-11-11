@@ -5,7 +5,7 @@
 % based on the new cluster centers
 
 %% Section 1: Get Image Data for goldy.ppm
-Clusters_Numbers = [3; 4; 7];
+Clusters_Numbers = [3, 4, 7];
 for cluster_Index = 1:size(Clusters_Numbers, 1)
     % Get the image feature matrix
     [image_Feature_Matrix, numRows, numCols] = getImageFeatureMatrix('./data/goldy.ppm');
@@ -19,8 +19,8 @@ for cluster_Index = 1:size(Clusters_Numbers, 1)
     cluster_Centers = rand(number_of_cluster, 3) * 255;
     cluster_Centers = int32(cluster_Centers);
     % Apply the k-means algorithm with different number of cluster centers
-    %[cluster_Labels, cluster_Centers] = my_kmeans(image_Feature_Matrix, number_of_cluster, cluster_Centers);
-    [cluster_Labels, cluster_Centers, numIters] = DoKmeans(image_Feature_Matrix, cluster_Centers);
+    %[cluster_Labels, cluster_Centers] = DoKmeans(image_Feature_Matrix, number_of_cluster, cluster_Centers);
+    [cluster_Labels, cluster_Centers, numIters] = newKmeans(image_Feature_Matrix, cluster_Centers);
     for feature_Index = 1:size(image_Feature_Matrix, 1)
         image_Feature_Matrix(feature_Index, :) = cluster_Centers(cluster_Labels(feature_Index), :);
     end
