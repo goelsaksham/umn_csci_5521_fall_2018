@@ -12,7 +12,6 @@ Labels(Labels==8)= 1;
 initVW; % only for the first run.
 rate=.1;
 
-%Data = [ones(1, size(Data, 2)); Data];
 new_Labels = zeros(2, size(Labels, 2));
 
 new_Labels(1, Labels == 1) = 1;

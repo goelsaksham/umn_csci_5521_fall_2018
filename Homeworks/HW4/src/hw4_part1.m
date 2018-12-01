@@ -28,6 +28,4 @@ for i = 1:numEpochs
     totalError(i) = current_Error;
 end
 
-disp(x);
-disp(z);
 plot(totalError);
