@@ -65,51 +65,55 @@ test_y(1, all_test_labels' == 9) = -1;
 test_y(2, all_test_labels' == 9) = 1;
 
 
-%% K = 18 Training
-minimal_validation_error = inf;
-rng('default');
-for random_restart = 1:10
-    k = 9;
-    rate=0.01;
-    V = randn(k, size(training_X, 1)+1);
-    W = randn(2, k+1);
-    numEpochs = 300;
-    totalError = zeros(numEpochs);
-    for i = 1:numEpochs
-        current_Error = 0;
-        for sample_num = 1:size(training_X, 2)
-            x = training_X(:, sample_num);
-            t = training_y(:, sample_num);
-            [dE_dV,dE_dW,E,z,y] = deltaNN(V,W,x,t);
-            V = V - (rate * dE_dV);
-            W = W - (rate * dE_dW);
-            current_Error = current_Error + E;    
-        end
-        totalError(i) = current_Error;
-    end
-    figure(random_restart);
-    plot(totalError);
-    
-    num_validation_Error = 0;
-    for sample_num = 1:size(validation_X, 2)
-        x = validation_X(:, sample_num);
-        t = validation_y(:, sample_num);
-        [~,~,~,z,~] = deltaNN(V,W,x,t);
-        if ~is_correct_prediction(t, z)
-            num_validation_Error = num_validation_Error + 1;
-        end
-    end
-    validation_Error = num_validation_Error/size(validation_X, 2);
-    if validation_Error < minimal_validation_error
-        minimal_validation_error = validation_Error;
-    end
-end
+% %% K = 18 Training
+% minimal_validation_error = inf;
+% rng('default');
+% for random_restart = 1:10
+%     k = 18;
+%     rate=0.01;
+%     V = randn(k, size(training_X, 1)+1);
+%     W = randn(2, k+1);
+%     numEpochs = 300;
+%     totalError = zeros(numEpochs);
+%     for i = 1:numEpochs
+%         current_Error = 0;
+%         for sample_num = 1:size(training_X, 2)
+%             x = training_X(:, sample_num);
+%             t = training_y(:, sample_num);
+%             [dE_dV,dE_dW,E,z,y] = deltaNN(V,W,x,t);
+%             V = V - (rate * dE_dV);
+%             W = W - (rate * dE_dW);
+%             current_Error = current_Error + E;    
+%         end
+%         totalError(i) = current_Error;
+%     end
+%     figure(random_restart);
+%     plot(totalError);
+%     
+%     num_validation_Error = 0;
+%     for sample_num = 1:size(validation_X, 2)
+%         x = validation_X(:, sample_num);
+%         t = validation_y(:, sample_num);
+%         [~,~,~,z,~] = deltaNN(V,W,x,t);
+%         if ~is_correct_prediction(t, z)
+%             num_validation_Error = num_validation_Error + 1;
+%         end
+%     end
+%     validation_Error = num_validation_Error/size(validation_X, 2);
+%     disp(validation_Error);
+%     if validation_Error < minimal_validation_error
+%         minimal_validation_error = validation_Error;
+%     end
+% end
+% 
+% disp(minimal_validation_error);
+% disp(k);
 
 
 %% K = 9 Training (Best Possible K)
 rng('default');
 for random_restart = 1:10
-    k = 9;
+    k = 8;
     rate=0.01;
     V = randn(k, size(training_X, 1)+1);
     W = randn(2, k+1);
@@ -140,9 +144,10 @@ for random_restart = 1:10
         end
     end
     validation_Error = num_validation_Error/size(validation_X, 2);
-    if validation_Error < 0.1
-        break;
-    end
+    disp(validation_Error);
+%     if validation_Error < 0.1
+%         break;
+%     end
 end
-disp(validation_Error);
-disp(k);
+% disp(validation_Error);
+% disp(k);
