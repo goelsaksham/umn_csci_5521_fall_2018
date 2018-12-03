@@ -39,4 +39,13 @@ for i = 1:numEpochs
     totalError(i) = current_Error;
 end
 
+figure(1);
 plot(totalError);
+title('Error v/s Epoch #');
+xlabel('Epoch #');
+ylabel('Training Error');
+figure(2);
+semilogy(totalError);
+title('Error v/s Epoch #');
+xlabel('Epoch #');
+ylabel('Training Error');
