@@ -16,6 +16,7 @@ train_nine_features = pixels((digit_label==9) & (flags < 4), :);
 train_nine_labels = digit_label((digit_label==9) & (flags < 4), :);
 all_training_features = vertcat(train_eight_features, train_nine_features);
 all_training_features = all_training_features - mean(all_training_features);
+all_training_features = all_training_features / 256;
 all_training_labels = vertcat(train_eight_labels, train_nine_labels);
 
 validation_eight_features = pixels((digit_label==8) & (flags == 4), :);
@@ -24,6 +25,7 @@ validation_nine_features = pixels((digit_label==9) & (flags == 4), :);
 validation_nine_labels = digit_label((digit_label==9) & (flags == 4), :);
 all_validation_features = vertcat(validation_eight_features, validation_nine_features);
 all_validation_features = all_validation_features - mean(all_validation_features);
+all_validation_features = all_validation_features / 256;
 all_validation_labels = vertcat(validation_eight_labels, validation_nine_labels);
 
 test_eight_features = pixels((digit_label==8) & (flags == 5), :);
@@ -32,6 +34,7 @@ test_nine_features = pixels((digit_label==9) & (flags == 5), :);
 test_nine_labels = digit_label((digit_label==9) & (flags == 5), :);
 all_test_features = vertcat(test_eight_features, test_nine_features);
 all_test_features = all_test_features - mean(all_test_features);
+all_test_features = all_test_features / 256;
 all_test_labels = vertcat(test_eight_labels, test_nine_labels);
 
 
@@ -115,8 +118,8 @@ rng('default');
 min_validation_error = inf;
 min_V = zeros(3, size(training_X, 1)+1);
 min_W = zeros(2, 4);
-for random_restart = 1:10
-    k = 18;
+for random_restart = 1:1
+    k = 1;
     rate=0.01;
     V = randn(k, size(training_X, 1)+1);
     W = randn(2, k+1);

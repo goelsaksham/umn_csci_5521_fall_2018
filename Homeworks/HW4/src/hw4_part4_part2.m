@@ -2,10 +2,10 @@
 % This script is used to solve the Part 1 of the Homework 4 for 
 % class CSCI 5521 - Introduction to Machine Learning. This part includes
 % using the deltaNN function to train a neural network.
-
-U0 = rand(2, 3);
-V0 = rand(3, 3);
-W0 = rand(2, 4);
+rng('default');
+U0 = randn(2, 3);
+V0 = randn(3, 3);
+W0 = randn(2, 4);
 Data = [1 -1 1 -1; 1 1 -1 -1];
 Labels = [-1 1 1 -1; 1 -1 -1 1];
 rate=.1;
