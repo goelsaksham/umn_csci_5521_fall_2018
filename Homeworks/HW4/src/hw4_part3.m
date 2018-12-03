@@ -74,7 +74,7 @@ test_y(2, all_test_labels' == 9) = 1;
 %     V = randn(k, size(training_X, 1)+1);
 %     W = randn(2, k+1);
 %     numEpochs = 300;
-%     totalError = zeros(numEpochs);
+%     totalError = zeros(numEpochs, 1);
 %     for i = 1:numEpochs
 %         current_Error = 0;
 %         for sample_num = 1:size(training_X, 2)
@@ -118,7 +118,7 @@ for random_restart = 1:10
     V = randn(k, size(training_X, 1)+1);
     W = randn(2, k+1);
     numEpochs = 300;
-    totalError = zeros(numEpochs);
+    totalError = zeros(numEpochs, 1);
     for i = 1:numEpochs
         current_Error = 0;
         for sample_num = 1:size(training_X, 2)

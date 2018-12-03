@@ -7,7 +7,7 @@ V0 = [.3 .3 .3; -.3 -.1 .1];
 W0 = [ .20 .40 .10; -.16 -.44 -.09];
 Data = [1 -1 1 -1; 1 1 -1 -1];
 Labels = [-1 1 1 -1; 1 -1 -1 1];
-rate=.1;
+rate=.05;
 
 numEpochs = 100;
 V = V0;
@@ -20,7 +20,7 @@ for i = 1:numEpochs
     for sample_num = 1:size(Data, 2)
         x = Data(:, sample_num);
         t = Labels(:, sample_num);
-        [dE_dV,dE_dW,E,z,y] = deltaNN(V,W,x,t);
+        [dE_dV,dE_dW,E,z,y] = deltaNN_part_a(V,W,x,t);
         V = V - (rate * dE_dV);
         W = W - (rate * dE_dW);
         current_Error = current_Error + E;
@@ -29,3 +29,4 @@ for i = 1:numEpochs
 end
 
 plot(totalError);
+disp(totalError);

@@ -24,7 +24,7 @@ numEpochs = 400;
 V = V0;
 W = W0;
 
-totalError = zeros(numEpochs);
+totalError = zeros(numEpochs, 1);
 
 for i = 1:numEpochs
     current_Error = 0;
