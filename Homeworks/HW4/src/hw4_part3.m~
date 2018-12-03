@@ -112,11 +112,11 @@ test_y(2, all_test_labels' == 9) = 1;
 
 %% K = 9 Training (Best Possible K)
 rng('default');
-min_validation_error = inf;
+mim_validation_error = inf;
 min_V = zeros(3, size(training_X, 1)+1);
 min_W = zeros(2, 4);
 for random_restart = 1:10
-    k = 9;
+    k = 3;
     rate=0.01;
     V = randn(k, size(training_X, 1)+1);
     W = randn(2, k+1);
@@ -147,28 +147,23 @@ for random_restart = 1:10
         end
     end
     validation_Error = num_validation_Error/size(validation_X, 2);
-    if validation_Error < min_validation_error
-       min_validation_error = validation_Error;
-       min_V = V;
-       min_W = W;
-    end
+    if validation_E
     % disp(validation_Error);
     
-end
-num_Test_Error = 0;
-for sample_num = 1:size(test_X, 2)
-    x = test_X(:, sample_num);
-    t = test_y(:, sample_num);
-    [~, ~, ~, z, ~] = deltaNN(min_V, min_W, x, t);
-    if ~is_correct_prediction(t, z)
-        num_Test_Error = num_Test_Error + 1;
+    num_Test_Error = 0;
+    for sample_num = 1:size(test_X, 2)
+        x = test_X(:, sample_num);
+        t = test_y(:, sample_num);
+        [~, ~, z, ~] = deltaNN(V, W, x, t);
+        if ~is_correct_prediction(t, z)
+            num_Test_Error = num_Test_Error + 1;
+        end
     end
-end
-num_Test_Error = num_Test_Error/size(test_X, 2);
-    
-disp(num_Test_Error);
+    num_Test_Error = num_Test_Error/size(test_X, 2);;
+    disp(num_Test_Error);
 %     if validation_Error < 0.1
 %         break;
 %     end
+end
 % disp(validation_Error);
 % disp(k);
