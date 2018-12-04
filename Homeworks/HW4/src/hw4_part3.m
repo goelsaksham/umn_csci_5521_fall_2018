@@ -118,8 +118,8 @@ rng('default');
 min_validation_error = inf;
 min_V = zeros(3, size(training_X, 1)+1);
 min_W = zeros(2, 4);
-for random_restart = 1:1
-    k = 1;
+for random_restart = 1:10
+    k = 3;
     rate=0.01;
     V = randn(k, size(training_X, 1)+1);
     W = randn(2, k+1);
