@@ -108,6 +108,8 @@ for random_restart = 1:10
             num_validation_Error = num_validation_Error + 1;
         end
     end
+    % condition to assign new value of V and W based on lowest value for
+    % validation error
     validation_Error = num_validation_Error/size(validation_X, 2);
     if validation_Error < min_validation_error
        min_validation_error = validation_Error;
@@ -121,6 +123,8 @@ end
 fprintf('k: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f\n', k, rate, numEpochs, min_training_error);
 fprintf('Best Random Start: %d, Validation Error: %f\n', random_restart_num, min_validation_error);
 num_Test_Error = 0;
+% iterator to calculate test error based using V and W obtained from
+% iteration with lowest validation error.
 for sample_num = 1:size(test_X, 2)
     x = test_X(:, sample_num);
     t = test_y(:, sample_num);

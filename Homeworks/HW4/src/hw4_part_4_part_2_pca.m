@@ -102,7 +102,7 @@ for random_restart = 1:4
     title(sprintf('Error v/s Epoch #'));
     xlabel('Epoch #');
     ylabel('Training Error');
-    
+    % iterator to calculate the validation error.
     num_validation_Error = 0;
     for sample_num = 1:size(validation_X, 2)
         x = validation_X(:, sample_num);
@@ -112,6 +112,8 @@ for random_restart = 1:4
             num_validation_Error = num_validation_Error + 1;
         end
     end
+    % condition to assign new value of V and W based on lowest value for
+    % validation error
     validation_Error = num_validation_Error/size(validation_X, 2);
     if validation_Error < min_validation_error
        min_validation_error = validation_Error;
@@ -125,6 +127,8 @@ for random_restart = 1:4
 end
 fprintf('k1: %d, k2: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f\n', k1, k2, rate, numEpochs, min_training_error);
 fprintf('Best Random Start: %d, Validation Error: %f\n', random_restart_num, min_validation_error);
+% iterator to calculate the test error using V and W obtained from
+% iteration that gives us the lowest validation error
 num_Test_Error = 0;
 for sample_num = 1:size(test_X, 2)
     x = test_X(:, sample_num);

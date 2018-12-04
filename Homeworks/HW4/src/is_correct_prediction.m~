@@ -1,6 +1,5 @@
 function [correct] = is_correct_prediction(actual,prediction)
-% this function is to wether the actual label is the same as what is
-% predicted from the network.
+% this function is to wether the 
 
 correct = 0;
 if (actual(1) < 0 && prediction(1) < 0)
