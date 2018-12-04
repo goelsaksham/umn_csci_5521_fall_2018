@@ -69,9 +69,9 @@ test_y(2, all_test_labels' == 9) = 1;
 
 
 %% Different K Training
-k = 5;
-rate=0.01;
-numEpochs = 300;
+k = 18;
+rate=0.005;
+numEpochs = 100;
 min_validation_error = inf;
 min_training_error = inf;
 random_restart_num = -1;
@@ -94,8 +94,6 @@ for random_restart = 1:10
         end
         totalError(i) = current_Error;
     end
-    %figure(random_restart);
-    %plot(totalError);
     
     num_validation_Error = 0;
     for sample_num = 1:size(validation_X, 2)
@@ -106,6 +104,8 @@ for random_restart = 1:10
             num_validation_Error = num_validation_Error + 1;
         end
     end
+    % condition to assign new value of V and W based on lowest value for
+    % validation error
     validation_Error = num_validation_Error/size(validation_X, 2);
     if validation_Error < min_validation_error
        min_validation_error = validation_Error;
@@ -119,6 +119,8 @@ end
 fprintf('k: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f\n', k, rate, numEpochs, min_training_error);
 fprintf('Best Random Start: %d, Validation Error: %f\n', random_restart_num, min_validation_error);
 num_Test_Error = 0;
+% iterator to calculate the test error using V and W obtained from
+% iteration that gives us the lowest validation error
 for sample_num = 1:size(test_X, 2)
     x = test_X(:, sample_num);
     t = test_y(:, sample_num);
