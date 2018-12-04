@@ -69,11 +69,10 @@ test_y(2, all_test_labels' == 9) = 1;
 
 
 %% Different K Training
-k = 5;
+k = 3;
 rate=0.01;
 numEpochs = 300;
 min_validation_error = inf;
-min_training_error = inf;
 random_restart_num = -1;
 min_V = zeros(k, size(training_X, 1)+1);
 min_W = zeros(2, k + 1);
@@ -109,14 +108,13 @@ for random_restart = 1:10
     validation_Error = num_validation_Error/size(validation_X, 2);
     if validation_Error < min_validation_error
        min_validation_error = validation_Error;
-       min_training_error = current_Error;
        min_V = V;
        min_W = W;
        random_restart_num = random_restart;
     end
     disp(validation_Error);
 end
-fprintf('k: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f\n', k, rate, numEpochs, min_training_error);
+fprintf('k: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f, Accuracy Error: %f\n', size(V, 1), rate, numEpochs, current_Error, Total_Acc_Err);
 fprintf('Best Random Start: %d, Validation Error: %f\n', random_restart_num, min_validation_error);
 num_Test_Error = 0;
 for sample_num = 1:size(test_X, 2)
