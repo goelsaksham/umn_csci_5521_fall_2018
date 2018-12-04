@@ -2,7 +2,7 @@ function [dE_dV,dE_dW,E,z,y]=deltaNN_part_a(V,W,x,t);
 % function [dE_dV,dE_dW,E,z,y]=deltaNN(V,W,x,t);
 % compute derivative of square-norm Error funcional
 % wrt V,W coeffs in a neural network with one hidden layer:
-%  x ->V->tanh-> y ->W->tanh-> z
+%  x ->V->sigmoid-> y ->W->tanh-> z
 %  x = input and is M x 1, V is N x M+1, W is P x N+1, 
 % The input parameters are:
 % - V (M x N+1): Weights between each input unit and each hidden unit 

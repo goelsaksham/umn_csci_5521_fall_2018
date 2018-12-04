@@ -1,5 +1,5 @@
-%% Homework 4 Part 1 
-% This script is used to solve the Part 1 of the Homework 4 for 
+%% Homework 4 Part 2
+% This script is used to solve the Part 2 of the Homework 4 for 
 % class CSCI 5521 - Introduction to Machine Learning. This part includes
 % using the deltaNN function to train a neural network.
 
