@@ -9,7 +9,7 @@ Data = [1 -1 1 -1; 1 1 -1 -1];
 Labels = [-1 1 1 -1; 1 -1 -1 1];
 rate=.05;
 
-numEpochs = 100;
+numEpochs = 1600;
 V = V0;
 W = W0;
 
@@ -28,5 +28,13 @@ for i = 1:numEpochs
     totalError(i) = current_Error;
 end
 
+figure(1);
 plot(totalError);
-disp(totalError);
+title('Error v/s Epoch #');
+xlabel('Epoch #');
+ylabel('Training Error');
+figure(2);
+semilogy(totalError);
+title('Error v/s Epoch #');
+xlabel('Epoch #');
+ylabel('Training Error');
