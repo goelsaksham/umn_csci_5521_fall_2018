@@ -69,9 +69,9 @@ test_y(2, all_test_labels' == 9) = 1;
 
 
 %% Different K Training
-k = 15;
-rate=0.1;
-numEpochs = 100;
+k = 20;
+rate=0.0001;
+numEpochs = 300;
 min_validation_error = inf;
 min_training_error = inf;
 random_restart_num = -1;
@@ -98,6 +98,7 @@ for random_restart = 1:10
     title(sprintf('Error v/s Epoch #'));
     xlabel('Epoch #');
     ylabel('Training Error');
+    %disp(current_Error/size(training_X, 2));
     
     num_validation_Error = 0;
     for sample_num = 1:size(validation_X, 2)

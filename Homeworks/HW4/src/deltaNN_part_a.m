@@ -26,7 +26,6 @@ yhat=zeros(N,1); for j=1:N;yhat(j)=V(j,:)*[1;x]; end
 y=zeros(N,1);for j=1:N;y(j)=smooth_relu(yhat(j));end
 zhat=zeros(P,1);for i=1:P;zhat(i)=W(i,:)*[1;y]; end
 z=zeros(P,1);for i=1:P;z(i)=tanh(zhat(i));end;
-
 % Compute error: discrepancy between computed outputs and true targets:
 E=.5*(norm(z-t))^2;
 

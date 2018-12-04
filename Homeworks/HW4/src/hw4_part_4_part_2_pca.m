@@ -69,25 +69,29 @@ test_y(2, all_test_labels' == 9) = 1;
 
 
 %% Different K Training
-k = 15;
+k1 = 20;
+k2 = 20;
 rate=0.1;
 numEpochs = 100;
 min_validation_error = inf;
 min_training_error = inf;
 random_restart_num = -1;
-min_V = zeros(k, size(training_X, 1)+1);
-min_W = zeros(2, k + 1);
+min_U = zeros(k1, size(training_X, 1)+1);
+min_V = zeros(k2, k1 + 1);
+min_W = zeros(2, k2 + 1);
 rng('default');
-for random_restart = 1:10
-    V = randn(k, size(training_X, 1)+1);
-    W = randn(2, k+1);
+for random_restart = 1:4
+    U = randn(k1, size(training_X, 1)+1);
+    V = randn(k2, k1+1);
+    W = randn(2, k2+1);
     totalError = zeros(numEpochs, 1);
     for i = 1:numEpochs
         current_Error = 0;
         for sample_num = 1:size(training_X, 2)
             x = training_X(:, sample_num);
             t = training_y(:, sample_num);
-            [dE_dV,dE_dW,E,z,y] = deltaNN_part_a(V,W,x,t);
+            [dE_dU, dE_dV,dE_dW,E,z,y] = deltaNN_part_b(U,V,W,x,t);
+            U = U - (rate * dE_dU);
             V = V - (rate * dE_dV);
             W = W - (rate * dE_dW);
             current_Error = current_Error + E;   
@@ -103,7 +107,7 @@ for random_restart = 1:10
     for sample_num = 1:size(validation_X, 2)
         x = validation_X(:, sample_num);
         t = validation_y(:, sample_num);
-        [~,~,~,z,~] = deltaNN_part_a(V,W,x,t);
+        [~,~,~,~,z,~] = deltaNN_part_b(U,V,W,x,t);
         if ~is_correct_prediction(t, z)
             num_validation_Error = num_validation_Error + 1;
         end
@@ -112,19 +116,20 @@ for random_restart = 1:10
     if validation_Error < min_validation_error
        min_validation_error = validation_Error;
        min_training_error = current_Error;
+       min_U = U;
        min_V = V;
        min_W = W;
        random_restart_num = random_restart;
     end
     disp(validation_Error);
 end
-fprintf('k: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f\n', k, rate, numEpochs, min_training_error);
+fprintf('k1: %d, k2: %d, Learning rate: %f, Num Epochs: %d, Last Training Error: %f\n', k1, k2, rate, numEpochs, min_training_error);
 fprintf('Best Random Start: %d, Validation Error: %f\n', random_restart_num, min_validation_error);
 num_Test_Error = 0;
 for sample_num = 1:size(test_X, 2)
     x = test_X(:, sample_num);
     t = test_y(:, sample_num);
-    [~, ~, ~, z, ~] = deltaNN_part_a(min_V, min_W, x, t);
+    [~,~, ~, ~, z, ~] = deltaNN_part_b(min_U,min_V, min_W, x, t);
     if ~is_correct_prediction(t, z)
         num_Test_Error = num_Test_Error + 1;
     end
